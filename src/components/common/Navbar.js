@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Navbar1 = () => {
   return (
-    <Navbar bg="light" expand="lg" className="border-bottom shadow-sm py-2">
+    <Navbar bg="light" expand="lg" className="border-bottom shadow-sm py-2 sticky-top">
       <Container>
         <Navbar.Brand href="/" className="text-primary" style={{ fontSize: '24px', fontWeight: 'bold' }}>
           Hired<span className="text-success">Safe</span>

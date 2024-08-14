@@ -1,8 +1,32 @@
-import React from 'react';
-import { Container, Row, Col, Form, FormControl, Nav, Button, Card } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card } from 'react-bootstrap';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Blog_Hero from "../assets/bloghero.jpg"
+import blog_thumbnail from "../assets/Report_Hero.jpg"
 
 const BlogDetails = () => {
+  const [blogs, setBlogs] = useState([]);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/blogs');
+        setBlogs(response.data);
+      } catch (error) {
+        console.error('There was an error fetching the blogs:', error);
+      }
+    };
+
+    fetchBlogs();
+  }, []); 
+
+  // Group blogs into rows of three
+  const blogRows = [];
+  for (let i = 0; i < blogs.length; i += 3) {
+    blogRows.push(blogs.slice(i, i + 3));
+  }
+
   return (
     <div>
       {/* Main Content */}
@@ -19,12 +43,12 @@ const BlogDetails = () => {
                   <p style={{ marginBottom: '20px', color: '#333' }}>
                     Welcome to the HiredSafe Blog, your trusted resource for navigating the job market with confidence and security. Here, we provide expert tips, in-depth articles, and real-life stories to help you identify and avoid job scams, understand industry trends, and make informed career decisions. Whether you're a fresh graduate stepping into the workforce or an experienced professional seeking new opportunities, our blog is dedicated to empowering you with the knowledge and tools you need to stay ahead in the ever-evolving job market. Stay safe, stay informed, and embark on your search with HiredSafe by your side.
                   </p>
-                  <a href="write-blog.html" className="button" style={buttonStyle}>Write Blog</a>
+                  <a href="/createblog" className="button" style={buttonStyle}>Write Blog</a>
                 </div>
               </Col>
               <Col md={6} className="text-center">
                 <div className="blog-intro-image">
-                  <img src="./Assets/Rectangle 17.png" alt="Blog Introduction Image" style={{ maxWidth: '100%', height: 'auto' }} />
+                  <img src={Blog_Hero} alt="Blog Introduction Image" style={{ maxWidth: '100%', height: 'auto' }} />
                 </div>
               </Col>
             </Row>
@@ -35,73 +59,39 @@ const BlogDetails = () => {
         <section className="blog-posts-section py-5" style={{ backgroundColor: '#287094' }}>
           <Container>
             <h3 style={{ marginBottom: '20px', color: '#ffffff', textAlign: 'center' }}>Recent Blog Posts</h3>
-            <Row>
-              {Array.from({ length: 4 }).map((_, index) => (
-                <Col md={6} lg={3} key={index} className="mb-4">
-                  <Card className="post h-100" style={postStyle}>
-                    <div className="post-image" style={postImageStyle}>
-                      <Card.Img variant="top" src="https://demo.tiny.pictures/main/example6.jpg" alt="Blog Image" />
-                    </div>
-                    <Card.Body>
-                      <Card.Text className="author" style={authorStyle}>Samruddhi Published today</Card.Text>
-                      <Card.Title as="h4" style={postTitleStyle}>How to Spot Fake Job Posting</Card.Title>
-                      <Card.Text style={postTextStyle}>
-                        Learn the red flags to watch out for when searching for legitimate job opportunities.
-                      </Card.Text>
-                      <a href="blog-details.html" className="read-more" style={readMoreStyle}>Read more</a>
-                    </Card.Body>
-                    <Card.Footer>
-                      <div className="post-icons" style={postIconsStyle}>
-                        <span>❤</span>
-                        <span>💬</span>
-                        <span>🔗</span>
+            {blogRows.map((row, rowIndex) => (
+              <Row key={rowIndex}>
+                {row.map((blog, index) => (
+                  <Col md={6} lg={4} key={index} className="mb-4">
+                    <Card className="post h-100" style={postStyle}>
+                      <div className="post-image" style={postImageStyle}>
+                        <Card.Img variant="top" src={blog_thumbnail} alt="Blog Image" />
                       </div>
-                    </Card.Footer>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
+                      <Card.Body>
+                        <Card.Text className="author" style={authorStyle}>
+                          {blog.name} Published on {new Date(blog.date).toLocaleDateString()}
+                        </Card.Text>
+                        <Card.Title as="h4" style={postTitleStyle}>{blog.title}</Card.Title>
+                        <Card.Text style={postTextStyle}>
+                          {blog.description.substring(0, 100)}... {/* Show only the first 100 characters */}
+                        </Card.Text>
+                        <a href={`/blog-details/${blog._id}`} className="read-more" style={readMoreStyle}>Read more</a>
+                      </Card.Body>
+                      <Card.Footer>
+                        <div className="post-icons" style={postIconsStyle}>
+                          <span>❤</span>
+                          <span>💬</span>
+                          <span>🔗</span>
+                        </div>
+                      </Card.Footer>
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+            ))}
           </Container>
         </section>
       </main>
-
-      {/* Footer */}
-      <footer className="py-5" style={{ backgroundColor: '#333', color: '#fff' }}>
-        <Container>
-          <Row className="footer-content">
-            <Col md={4} className="footer-section">
-              <h5>Company</h5>
-              <ul className="list-unstyled">
-                <li><a href="#" style={{ color: '#ccc' }}>About us</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Pricing</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Privacy Policy</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Terms & Conditions</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Refund Policy</a></li>
-              </ul>
-            </Col>
-            <Col md={4} className="footer-section">
-              <h5>Solutions</h5>
-              <ul className="list-unstyled">
-                <li><a href="#" style={{ color: '#ccc' }}>Product</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Brands & Businesses</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Agencies</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Creators & Freelancers</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Case Studies</a></li>
-              </ul>
-            </Col>
-            <Col md={4} className="footer-section">
-              <h5>Community</h5>
-              <ul className="list-unstyled">
-                <li><a href="#" style={{ color: '#ccc' }}>Discussion Forum</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Converters & Optimizer</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Blog</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Careers</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Contact Us</a></li>
-              </ul>
-            </Col>
-          </Row>
-        </Container>
-      </footer>
     </div>
   );
 };
@@ -132,9 +122,9 @@ const postStyle = {
 
 const postImageStyle = {
   width: '100%',
-  height: '150px',
+  height: '326px',
   overflow: 'hidden',
-  marginBottom: '15px'
+  marginBottom: '1px'
 };
 
 const authorStyle = {
@@ -151,7 +141,7 @@ const postTitleStyle = {
 
 const postTextStyle = {
   marginBottom: '15px',
-  color: '#333'
+  color: '#333' 
 };
 
 const readMoreStyle = {

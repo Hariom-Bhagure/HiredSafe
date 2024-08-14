@@ -1,20 +1,49 @@
-import React from 'react';
-import { Container, Row, Col, Form, FormControl, Button, Nav } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState } from 'react';
+import { Container, Form, Button } from 'react-bootstrap';
+import axios from 'axios';
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post('http://localhost:5000/api/contact', formData);
+      console.log(res.data);
+      // Reset form after submission
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        message: ''
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div>
-      {/* Main Content */}
       <main>
-        {/* Contact Section */}
         <section className="contact-section py-5" style={{ textAlign: 'center' }}>
           <Container>
             <h2 style={{ fontSize: '28px', color: '#287094', marginBottom: '10px' }}>Connect with Us:</h2>
             <p style={{ fontSize: '16px', color: '#555', marginBottom: '30px' }}>
               Your Safety and Satisfaction Are Our Top Priorities.
             </p>
-            <Form className="contact-form mx-auto" style={{ maxWidth: '600px' }}>
+            <Form className="contact-form mx-auto" style={{ maxWidth: '600px' }} onSubmit={handleSubmit}>
               <Form.Group className="form-group" style={{ marginBottom: '20px', textAlign: 'left' }}>
                 <Form.Label htmlFor="name" style={{ fontWeight: 'bold', color: '#287094' }}>Name</Form.Label>
                 <Form.Control
@@ -22,6 +51,8 @@ const Contact = () => {
                   id="name"
                   placeholder="Enter your name"
                   required
+                  value={formData.name}
+                  onChange={handleChange}
                   style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px' }}
                 />
               </Form.Group>
@@ -32,6 +63,8 @@ const Contact = () => {
                   id="email"
                   placeholder="Enter your email"
                   required
+                  value={formData.email}
+                  onChange={handleChange}
                   style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px' }}
                 />
               </Form.Group>
@@ -42,6 +75,8 @@ const Contact = () => {
                   id="phone"
                   placeholder="Enter your phone number"
                   required
+                  value={formData.phone}
+                  onChange={handleChange}
                   style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px' }}
                 />
               </Form.Group>
@@ -52,6 +87,8 @@ const Contact = () => {
                   id="message"
                   placeholder="Tell us your problem"
                   required
+                  value={formData.message}
+                  onChange={handleChange}
                   style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '14px', resize: 'vertical', minHeight: '100px' }}
                 />
               </Form.Group>
@@ -60,44 +97,6 @@ const Contact = () => {
           </Container>
         </section>
       </main>
-
-      {/* Footer */}
-      <footer className="py-5" style={{ backgroundColor: '#333', color: '#fff' }}>
-        <Container>
-          <Row className="footer-content">
-            <Col md={4} className="footer-section">
-              <h5>Company</h5>
-              <ul className="list-unstyled">
-                <li><a href="#" style={{ color: '#ccc' }}>About us</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Pricing</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Privacy Policy</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Terms & Conditions</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Refund Policy</a></li>
-              </ul>
-            </Col>
-            <Col md={4} className="footer-section">
-              <h5>Solutions</h5>
-              <ul className="list-unstyled">
-                <li><a href="#" style={{ color: '#ccc' }}>Product</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Brands & Businesses</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Agencies</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Creators & Freelancers</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Case Studies</a></li>
-              </ul>
-            </Col>
-            <Col md={4} className="footer-section">
-              <h5>Community</h5>
-              <ul className="list-unstyled">
-                <li><a href="#" style={{ color: '#ccc' }}>Discussion Forum</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Converters & Optimizer</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Blog</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Careers</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Contact Us</a></li>
-              </ul>
-            </Col>
-          </Row>
-        </Container>
-      </footer>
     </div>
   );
 };

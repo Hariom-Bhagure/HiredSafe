@@ -7,6 +7,10 @@ const router = express.Router();
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../../components/Config/Cloudinary');
 
+// Middleware to parse JSON and form data
+router.use(express.json());
+router.use(express.urlencoded({ extended: true }));
+
 // Configure multer storage to use Cloudinary
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
@@ -22,27 +26,32 @@ const upload = multer({ storage: storage });
 // POST request to submit a scam report
 router.post('/', upload.single('evidence'), async (req, res) => {
   try {
-    const { companyName, companyAddress, industry, dateOfScam, description, reporterName, reporterEmail } = req.body;
-    const evidence = req.file ? req.file.path : ''; // Get the Cloudinary URL of the uploaded file
+    if (!req.file) {
+      return res.status(400).json({ message: 'File upload failed' });
+    }
+    
+    const evidenceUrl = req.file.path; // The URL from Cloudinary
 
+    // Assume you have other form data in `req.body` (like `companyName`, `description`, etc.)
+    const { companyName, description } = req.body;
+
+    // If using Mongoose to save the report
     const report = new Report({
       companyName,
-      companyAddress,
-      industry,
-      dateOfScam,
       description,
-      evidence,
-      reporterName,
-      reporterEmail,
-      status: 'Pending' // Default status when creating a new report
+      evidence: evidenceUrl,
+      status: 'Pending',
     });
 
     await report.save();
+    
     res.status(201).json({ message: 'Report submitted successfully', report });
   } catch (err) {
+    console.error('Error occurred:', err.message || err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
+
 // Get all reports
 router.get('/', async (req, res) => {
   try {
@@ -80,7 +89,21 @@ router.put('/:id/publish', async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
+// GET a specific report by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const report = await Report.findById(req.params.id);
 
+    if (!report) {
+      return res.status(404).json({ message: 'Report not found' });
+    }
+
+    res.json(report);
+  } catch (error) {
+    console.error('Error fetching report:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 
 module.exports = router;

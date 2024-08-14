@@ -1,59 +1,27 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Container, Image, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import Home_Hero from "../assets/Home_Hero.jpg"
 
 const Home = () => {
   const [publishedReports, setPublishedReports] = useState([]);
+
   const fetchReports = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/reports');
-      console.log('API Response:', response.data); // Debug log for API response
-  
-      if (!Array.isArray(response.data)) {
-        console.error('API response is not an array');
-        return;
-      }
-  
-      // Assuming response.data is an array of reports
-      const published = response.data.filter(report => {
-        console.log('Checking report:', report);
-        return report.status === 'Published';
-      });
-      console.log('Filtered Published Reports:', published); // Debug log for filtered reports
-  
+      const published = response.data.filter(report => report.status === 'Published');
       setPublishedReports(published);
     } catch (error) {
       console.error('Error fetching reports:', error);
     }
   };
-  
-  useEffect(() => {
-    fetchReports();
-  
-    const handleReportPublished = () => {
-      fetchReports();
-    };
-  
-    window.addEventListener('reportPublished', handleReportPublished);
-  
-    return () => {
-      window.removeEventListener('reportPublished', handleReportPublished);
-    };
-  }, []);
-  
 
   useEffect(() => {
     fetchReports();
-
-    const handleReportPublished = () => {
-      fetchReports();
-    };
-
+    const handleReportPublished = () => fetchReports();
     window.addEventListener('reportPublished', handleReportPublished);
-
-    return () => {
-      window.removeEventListener('reportPublished', handleReportPublished);
-    };
+    return () => window.removeEventListener('reportPublished', handleReportPublished);
   }, []);
 
   return (
@@ -74,7 +42,7 @@ const Home = () => {
               </Col>
               <Col md={6} className="text-center">
                 <Image
-                  src="https://demo.tiny.pictures/main/example6.jpg"
+                  src={Home_Hero  }
                   alt="Protect Yourself From Job Scams"
                   fluid
                   style={{ maxWidth: '100%' }}
@@ -101,7 +69,7 @@ const Home = () => {
                       <Card.Text>
                         {report.description.length > 150 ? `${report.description.substring(0, 150)}...` : report.description}
                       </Card.Text>
-                      <a href={`/reports/${report._id}`} className="read-more">Read More</a>
+                      <Link to={`/reportdetails/${report._id}`} className="read-more">Read More</Link>
                     </Card.Body>
                   </Card>
                 </Col>
@@ -132,7 +100,7 @@ const Home = () => {
                     <Card.Text>
                       Learn the red flags to watch out for when searching for legitimate job opportunities.
                     </Card.Text>
-                    <a href="#" className="read-more">Read more</a>
+                    <Link to="#" className="read-more">Read more</Link>
                   </Card.Body>
                 </Card>
               </Col>
@@ -152,7 +120,7 @@ const Home = () => {
                     <Card.Text>
                       Learn the red flags to watch out for when searching for legitimate job opportunities.
                     </Card.Text>
-                    <a href="#" className="read-more">Read more</a>
+                    <Link to="#" className="read-more">Read more</Link>
                   </Card.Body>
                 </Card>
               </Col>
@@ -172,81 +140,13 @@ const Home = () => {
                     <Card.Text>
                       Learn the red flags to watch out for when searching for legitimate job opportunities.
                     </Card.Text>
-                    <a href="#" className="read-more">Read more</a>
+                    <Link to="#" className="read-more">Read more</Link>
                   </Card.Body>
                 </Card>
               </Col>
             </Row>
           </Container>
         </section>
-
-        {/* Footer */}
-        <footer className="py-5" style={{ backgroundColor: '#333', color: '#fff' }}>
-          <Container>
-            <Row className="footer-content">
-              <Col md={4} className="footer-section">
-                <h5>Company</h5>
-                <ul>
-                  <li>
-                    <a href="#" style={{ color: '#ccc' }}>About us</a>
-                  </li>
-                  <li>
-                    <a href="#" style={{ color: '#ccc' }}>Pricing</a>
-                  </li>
-                  <li>
-                    <a href="#" style={{ color: '#ccc' }}>Privacy Policy</a>
-                  </li>
-                  <li>
-                    <a href="#" style={{ color: '#ccc' }}>Terms & Conditions</a>
-                  </li>
-                  <li>
-                    <a href="#" style={{ color: '#ccc' }}>Refund Policy</a>
-                  </li>
-                </ul>
-              </Col>
-              <Col md={4} className="footer-section">
-                <h5>Solutions</h5>
-                <ul>
-                  <li>
-                    <a href="#" style={{ color: '#ccc' }}>Product</a>
-                  </li>
-                  <li>
-                    <a href="#" style={{ color: '#ccc' }}>Brands & Businesses</a>
-                  </li>
-                  <li>
-                    <a href="#" style={{ color: '#ccc' }}>Agencies</a>
-                  </li>
-                  <li>
-                    <a href="#" style={{ color: '#ccc' }}>Creators & Freelancers</a>
-                  </li>
-                  <li>
-                    <a href="#" style={{ color: '#ccc' }}>Case Studies</a>
-                  </li>
-                </ul>
-              </Col>
-              <Col md={4} className="footer-section">
-                <h5>Community</h5>
-                <ul>
-                  <li>
-                    <a href="#" style={{ color: '#ccc' }}>Discussion Forum</a>
-                  </li>
-                  <li>
-                    <a href="#" style={{ color: '#ccc' }}>Converters & Optimizer</a>
-                  </li>
-                  <li>
-                    <a href="#" style={{ color: '#ccc' }}>Blog</a>
-                  </li>
-                  <li>
-                    <a href="#" style={{ color: '#ccc' }}>Careers</a>
-                  </li>
-                  <li>
-                    <a href="#" style={{ color: '#ccc' }}>Contact Us</a>
-                  </li>
-                </ul>
-              </Col>
-            </Row>
-          </Container>
-        </footer>
       </main>
     </div>
   );

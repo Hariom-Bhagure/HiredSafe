@@ -46,44 +46,6 @@ const About = () => {
           <img src="./Assets/about.png" alt="About HiredSafe" style={{ maxWidth: '100%', height: 'auto', marginTop: '20px', borderRadius: '8px' }} />
         </Container>
       </section>
-
-      {/* Footer */}
-      <footer className="py-5" style={{ backgroundColor: '#333', color: '#fff' }}>
-        <Container>
-          <Row className="footer-content">
-            <Col md={4} className="footer-section">
-              <h5>Company</h5>
-              <ul className="list-unstyled">
-                <li><a href="#" style={{ color: '#ccc' }}>About us</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Pricing</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Privacy Policy</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Terms & Conditions</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Refund Policy</a></li>
-              </ul>
-            </Col>
-            <Col md={4} className="footer-section">
-              <h5>Solutions</h5>
-              <ul className="list-unstyled">
-                <li><a href="#" style={{ color: '#ccc' }}>Product</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Brands & Businesses</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Agencies</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Creators & Freelancers</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Case Studies</a></li>
-              </ul>
-            </Col>
-            <Col md={4} className="footer-section">
-              <h5>Community</h5>
-              <ul className="list-unstyled">
-                <li><a href="#" style={{ color: '#ccc' }}>Discussion Forum</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Converters & Optimizer</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Blog</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Careers</a></li>
-                <li><a href="#" style={{ color: '#ccc' }}>Contact Us</a></li>
-              </ul>
-            </Col>
-          </Row>
-        </Container>
-      </footer>
     </div>
   );
 };

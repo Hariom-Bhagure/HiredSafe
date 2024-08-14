@@ -10,7 +10,7 @@ const ReportScam = () => {
     industry: '',
     dateOfScam: '',
     description: '',
-    evidence: null,
+    evidence: '',
     reporterName: '',
     reporterEmail: ''
   });
@@ -23,7 +23,6 @@ const ReportScam = () => {
   const handleFileChange = (e) => {
     setFormData({ ...formData, evidence: e.target.files[0] });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -31,12 +30,14 @@ const ReportScam = () => {
       Object.keys(formData).forEach(key => {
         data.append(key, formData[key]);
       });
-
+  
       const response = await axios.post('http://localhost:5000/api/reports', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-
-      alert(response.data.message);
+  
+      console.log(response.data); // Debugging: inspect the response data
+      alert(JSON.stringify(response.data)); // Alert the whole response data as a string
+  
       setFormData({
         companyName: '',
         companyAddress: '',
@@ -48,10 +49,12 @@ const ReportScam = () => {
         reporterEmail: ''
       });
     } catch (error) {
-      alert('Error submitting report: ' + error.response.data.message);
+      console.log(error.response ? error.response.data : error.message); // Debugging: inspect the error data
+      alert(error.response ? JSON.stringify(error.response.data) : 'Error: ' + error.message);
     }
   };
-
+  
+  
   return (
     <div>
       {/* Main Content */}
